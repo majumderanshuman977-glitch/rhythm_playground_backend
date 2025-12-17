@@ -1,0 +1,142 @@
+<%- include('../partials/headers', { title: "Edit Class Session" }) %>
+<%- include('../partials/sidebar', { title: "Class Sessions" }) %>
+
+<div class="content-wrapper">
+  <!-- Page Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1 class="m-0">Edit Class Session</h1>
+        </div>
+        <div class="col-sm-6 text-end">
+          <a href="/admin/class-sessions" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alerts -->
+  <% if (success) { %>
+    <div class="alert alert-success text-center mx-3">
+      <%= success %>
+    </div>
+  <% } %>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul class="mb-0">
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Main Form -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Update Session Details</h3>
+        </div>
+
+        <form action="/admin/class-sessions/edit/<%= classSession.id %>" method="POST" class="p-3">
+          <div class="row g-3">
+
+            <!-- Class Type -->
+            <div class="col-md-6">
+              <label for="class_type_id" class="form-label">Class Type <span class="text-danger">*</span></label>
+              <select class="form-select" id="class_type_id" name="class_type_id" required>
+                <% classTypes.forEach(type => { %>
+                  <option value="<%= type.id %>" <%= classSession.class_type_id === type.id ? 'selected' : '' %>>
+                    <%= type.name %>
+                  </option>
+                <% }); %>
+              </select>
+            </div>
+
+            <!-- Instructor -->
+            <div class="col-md-6">
+              <label for="instructor_id" class="form-label">Instructor <span class="text-danger">*</span></label>
+              <select class="form-select" id="instructor_id" name="instructor_id" required>
+                <% instructors.forEach(ins => { %>
+                  <option value="<%= ins.id %>" <%= classSession.instructor_id === ins.id ? 'selected' : '' %>>
+                    <%= ins.first_name %> <%= ins.last_name %>
+                  </option>
+                <% }); %>
+              </select>
+            </div>
+
+            <!-- Studio -->
+            <div class="col-md-6">
+              <label for="studio_id" class="form-label">Studio <span class="text-danger">*</span></label>
+              <select class="form-select" id="studio_id" name="studio_id" required>
+                <% studios.forEach(st => { %>
+                  <option value="<%= st.id %>" <%= classSession.studio_id === st.id ? 'selected' : '' %>>
+                    <%= st.name %>
+                  </option>
+                <% }); %>
+              </select>
+            </div>
+
+            <!-- Capacity -->
+            <div class="col-md-3">
+              <label for="capacity" class="form-label">Capacity</label>
+              <input type="number" class="form-control" id="capacity" name="capacity"
+                value="<%= classSession.capacity %>" min="1" />
+            </div>
+
+            <!-- Duration -->
+            <div class="col-md-3">
+              <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+              <input type="number" class="form-control" id="duration_minutes" name="duration_minutes"
+                value="<%= classSession.duration_minutes %>" min="1" />
+            </div>
+
+            <!-- Start Time -->
+            <div class="col-md-6">
+              <label for="start_time" class="form-label">Start Time</label>
+              <input type="datetime-local" class="form-control" id="start_time" name="start_time"
+                value="<%= classSession.start_time ? classSession.start_time.toISOString().slice(0,16) : '' %>" />
+            </div>
+
+            <!-- End Time -->
+            <div class="col-md-6">
+              <label for="end_time" class="form-label">End Time</label>
+              <input type="datetime-local" class="form-control" id="end_time" name="end_time"
+                value="<%= classSession.end_time ? classSession.end_time.toISOString().slice(0,16) : '' %>" />
+            </div>
+
+            <!-- Price -->
+            <div class="col-md-6">
+              <label for="price" class="form-label">Price (₹)</label>
+              <input type="number" class="form-control" id="price" name="price"
+                value="<%= classSession.price %>" step="0.01" />
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-6">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status">
+                <option value="scheduled" <%= classSession.status === 'scheduled' ? 'selected' : '' %>>Scheduled</option>
+                <option value="completed" <%= classSession.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                <option value="cancelled" <%= classSession.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="card-footer text-end">
+            <a href="/admin/class-sessions" class="btn btn-secondary me-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Session</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

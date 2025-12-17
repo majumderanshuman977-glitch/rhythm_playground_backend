@@ -1,0 +1,104 @@
+<%- include('../partials/headers', { title: "Edit Class Type" }) %>
+<%- include('../partials/sidebar', { title: "Class Types" }) %>
+
+<div class="content-wrapper">
+  <!-- Page Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1 class="m-0">Edit Class Type</h1>
+        </div>
+        <div class="col-sm-6 text-end">
+          <a href="/admin/class-type/list" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flash Messages -->
+  <% if (success) { %>
+    <div class="alert alert-success text-center mx-3"><%= success %></div>
+  <% } %>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul class="mb-0">
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }); %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Edit Form -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Update Class Type Details</h3>
+        </div>
+
+        <form action="/admin/class-type/edit/<%= classType.id %>" method="POST" enctype="multipart/form-data">
+          <div class="card-body row g-3">
+
+            <!-- Name -->
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Class Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="name" name="name"
+                     value="<%= classType.name %>" required />
+            </div>
+
+            <!-- Duration -->
+            <div class="col-md-6 mb-3">
+              <label for="duration_minutes" class="form-label">Duration (Minutes) <span class="text-danger">*</span></label>
+              <input type="number" min="1" class="form-control" id="duration_minutes" name="duration_minutes"
+                     value="<%= classType.duration_minutes %>" required />
+            </div>
+
+            <!-- Description -->
+            <div class="col-md-12 mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="4"><%= classType.description || '' %></textarea>
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-6 mb-3">
+              <label for="is_active" class="form-label">Status</label>
+              <select class="form-select" id="is_active" name="is_active">
+                <option value="true" <%= classType.is_active ? 'selected' : '' %>>Active</option>
+                <option value="false" <%= !classType.is_active ? 'selected' : '' %>>Inactive</option>
+              </select>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="col-md-6 mb-3">
+              <label for="image" class="form-label">Class Type Image</label>
+              <div class="input-group">
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" />
+                <label class="input-group-text" for="image">Upload</label>
+              </div>
+
+              <% if (classType.image) { %>
+                <div class="mt-2">
+                  <img src="<%= classType.image %>" alt="Class Image" class="img-thumbnail shadow-sm"
+                       style="max-width: 180px;">
+                </div>
+              <% } %>
+            </div>
+
+          </div>
+
+          <div class="card-footer text-end">
+            <button type="reset" class="btn btn-secondary me-2">Reset</button>
+            <button type="submit" class="btn btn-primary">Update Class Type</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

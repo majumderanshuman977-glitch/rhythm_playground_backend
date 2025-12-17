@@ -1,0 +1,84 @@
+<%- include('../partials/headers', { title: "Edit Short Video" }) %>
+<%- include('../partials/sidebar', { title: "Short Videos" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h1>Edit Short Video</h1>
+    </div>
+  </section>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul>
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-body">
+          <form action="/admin/short-videos/update/<%= short_video.id %>" method="POST" enctype="multipart/form-data">
+            <!-- Video Preview -->
+            <div class="mb-3">
+              <label>Current Video</label><br>
+              <video width="200" controls>
+                <source src="<%= short_video.video %>" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <div class="mb-3">
+              <label>Upload New Video</label>
+              <input type="file" name="video" class="form-control" accept="video/*">
+            </div>
+
+            <!-- Thumbnail Preview -->
+            <div class="mb-3">
+              <label>Current Thumbnail</label><br>
+              <img src="<%= short_video.thumbnail %>" width="150" class="rounded shadow-sm" alt="Thumbnail">
+            </div>
+
+            <div class="mb-3">
+              <label>Upload New Thumbnail</label>
+              <input type="file" name="thumbnail" class="form-control" accept="image/*">
+            </div>
+
+            <!-- Class Type Dropdown -->
+            <div class="mb-3">
+              <label>Select Class Type (Optional)</label>
+              <select name="service_id" class="form-control">
+                <option value="">-- Select Class Type --</option>
+                <% classTypes.forEach(type => { %>
+                  <option value="<%= type.id %>" <%= short_video.service_id == type.id ? 'selected' : '' %>>
+                    <%= type.name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Status Dropdown -->
+            <div class="mb-3">
+              <label>Status</label>
+              <select name="status" class="form-control">
+                <option value="active" <%= short_video.status === 'active' ? 'selected' : '' %>>Active</option>
+                <option value="inactive" <%= short_video.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+              </select>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-secondary me-2">Reset</button>
+              <button type="submit" class="btn btn-primary">Update Video</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

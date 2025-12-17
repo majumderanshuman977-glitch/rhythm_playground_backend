@@ -1,0 +1,119 @@
+<%- include('../partials/headers', { title: "Manage Short Videos" }) %>
+<%- include('../partials/sidebar', { title: "Short Videos" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <h1>Short Videos</h1>
+    
+    </div>
+  </section>
+
+  <% if (success) { %>
+    <div class="alert alert-success text-center mx-3"><%= success %></div>
+  <% } %>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-danger mx-3">
+      <ul><% errors.forEach(e => { %><li><%= e %></li><% }); %></ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-body table-responsive">
+          <table class="table table-bordered table-hover text-center">
+            <thead class="table-primary">
+              <tr>
+                <th>#</th>
+                <!-- <th>Video</th> -->
+                <th>Thumbnail</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (short_videos.length > 0) { %>
+                <% short_videos.forEach((v, i) => { %>
+                  <tr>
+                    <td><%= i + 1 %></td>
+
+                    <!-- Video Preview -->
+                    <!-- <td>
+                      <video src="</%= v.video %>" width="120" height="70" class="rounded shadow-sm" muted controls></video>
+                    </td> -->
+
+                    <!-- Thumbnail Preview -->
+                    <td>
+                      <img src="<%= v.thumbnail %>" width="100" height="70" class="rounded shadow-sm" alt="Thumbnail"/>
+                    </td>
+
+                    <!-- Class Type -->
+                    <td><%= v.classType ? v.classType.name : "N/A" %></td>
+
+                    <!-- Status -->
+                    <td>
+                      <% if (v.status === "active") { %>
+                        <span class="badge bg-success">Active</span>
+                      <% } else { %>
+                        <span class="badge bg-secondary">Inactive</span>
+                      <% } %>
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                      <a href="/admin/short-videos/edit/<%= v.id %>" class="btn btn-warning btn-sm me-1">Edit</a>
+                      <button data-id="<%= v.id %>" class="btn btn-danger btn-sm delete-btn">Delete</button>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="text-muted">No short videos found.</td>
+                </tr>
+              <% } %>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "Delete this short video?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(result => {
+        if (result.isConfirmed) {
+          fetch(`/admin/short-videos/delete/${id}`, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire('Deleted!', data.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+              } else {
+                Swal.fire('Error', data.message, 'error');
+              }
+            });
+        }
+      });
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

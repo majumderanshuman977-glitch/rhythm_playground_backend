@@ -1,0 +1,154 @@
+<%- include('../partials/headers', { title: "Manage Testimonials" }) %>
+<%- include('../partials/sidebar', { title: "Testimonials" }) %>
+
+<div class="content-wrapper">
+
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Manage Testimonials</h1>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <a href="/admin/testimonials/add" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add Testimonial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Message -->
+    <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success text-center mx-3">
+            <%= success %>
+        </div>
+    <% } %>
+
+    <!-- Error Messages -->
+   <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger">
+        <ul>
+            <% errors.forEach(err => { %>
+                <li><%= err %></li>
+            <% }); %>
+        </ul>
+    </div>
+<% } %>
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-outline card-primary shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">Testimonial List</h3>
+                </div>
+
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-striped table-hover align-middle">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th style="width: 200px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (testimonials && testimonials.length > 0) { %>
+                                <% testimonials.forEach((t, index) => { %>
+                                    <tr>
+                                        <td class="text-center"><%= index + 1 %></td>
+
+                                        <td class="text-center">
+                                            <% if (t.image) { %>
+                                                <img src="<%= baseUrl %>/uploads/testimonials/<%= t.image %>" class="rounded-circle border" width="60" height="60" />
+                                            <% } else { %>
+                                                <img src="/images/default-avatar.png" class="rounded-circle border" width="60" height="60" />
+                                            <% } %>
+                                        </td>
+
+                                        <td><%= t.name %></td>
+                                        <td><%= t.role || 'N/A' %></td>
+                                        
+                                        <td style="max-width: 280px;">
+                                            <%= t.description.length > 80 ? t.description.substring(0, 80) + '...' : t.description %>
+                                        </td>
+
+                                      
+
+                                        <td class="text-center">
+                                            <% if (t.status) { %>
+                                                <span class="badge bg-success">Active</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            <% } %>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a href="/admin/testimonials/edit/<%= t.id %>" class="btn btn-warning btn-sm me-1">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="<%= t.id %>">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">
+                                        No testimonials found
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+
+                Swal.fire({
+                    title: 'Delete testimonial?',
+                    text: "This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch(`/admin/testimonials/delete/${id}`, { method: 'DELETE' })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Deleted!', data.message, 'success')
+                                    setTimeout(() => window.location.reload(), 900)
+                                } else {
+                                    Swal.fire('Error', data.message, 'error')
+                                }
+                            })
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<%- include('../partials/footer') %>

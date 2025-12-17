@@ -1,0 +1,124 @@
+<%- include('../partials/headers', { title: "Manage Banners" }) %>
+<%- include('../partials/sidebar', { title: "Banners" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <h1>Banners</h1>
+      <a href="/admin/banners/add" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-circle"></i> Add Banner
+      </a>
+    </div>
+  </section>
+
+  <% if (success) { %>
+    <div class="alert alert-success text-center mx-3"><%= success %></div>
+  <% } %>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-danger mx-3">
+      <ul><% errors.forEach(e => { %><li><%= e %></li><% }); %></ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-body table-responsive">
+          
+          <table class="table table-bordered table-hover text-center">
+            <thead class="table-primary">
+              <tr>
+                <th>#</th>
+                <th>Banner</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (banners.length > 0) { %>
+                <% banners.forEach((b, i) => { %>
+                  <tr>
+                    <td><%= i + 1 %></td>
+
+                    <!-- Thumbnail / Video Preview -->
+                    <td>
+                      
+                        <video src="<%= b.banner %>" width="120" height="70" class="rounded shadow-sm" muted></video>
+                  
+                        
+                
+                    </td>
+
+                    <td><%= b.title %></td>
+
+                    <td>
+                      <% if (b.is_active==1) { %>
+                        <span class="badge bg-success">Active</span>
+                      <% } else if(b.is_active==0){ %>
+                        <span class="badge bg-secondary">Inactive</span>
+                      <% } %>
+                    </td>
+
+                    <td>
+                      <a href="/admin/banners/<%= b.id %>" class="btn btn-info btn-sm me-1">View</a>
+                      <a href="/admin/banners/edit/<%= b.id %>" class="btn btn-warning btn-sm me-1">Edit</a>
+
+                      <button data-id="<%= b.id %>" class="btn btn-danger btn-sm delete-btn">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="text-muted">No banners found.</td>
+                </tr>
+              <% } %>
+            </tbody>
+
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "Delete this banner?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(result => {
+
+        if (result.isConfirmed) {
+          fetch(`/admin/banners/delete/${id}`, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire('Deleted!', data.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+              } else {
+                Swal.fire('Error', data.message, 'error');
+              }
+            });
+        }
+
+      });
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

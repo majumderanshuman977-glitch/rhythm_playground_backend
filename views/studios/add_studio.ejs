@@ -1,0 +1,98 @@
+<%- include('../partials/headers', { title: "Add New Studio" }) %>
+<%- include('../partials/sidebar') %>
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1>Add New Studio</h1>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <a href="/admin/studios/list" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="alert alert-danger mx-3">
+            <ul class="mb-0">
+                <% errors.forEach(err => { %><li><%= err %></li><% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (success) { %>
+        <div class="alert alert-success text-center mx-3"><%= success %></div>
+    <% } %>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-outline card-primary shadow-sm">
+                <div class="card-body">
+                    <form action="/admin/studios/add" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Studio Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter studio name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" placeholder="Enter address" required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" name="city" class="form-control" placeholder="Enter city">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">State</label>
+                                <input type="text" name="state" class="form-control" placeholder="Enter state">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Country</label>
+                                <input type="text" name="country" class="form-control" placeholder="Enter country">
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="text" name="latitude" class="form-control" placeholder="e.g., 37.7749">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="text" name="longitude" class="form-control" placeholder="e.g., -122.4194">
+                            </div>
+                        </div> -->
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control" placeholder="Enter phone number">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter email address">
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" name="active" id="active" checked>
+                            <label class="form-check-label" for="active">Active</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Add Studio</button>
+                        <a href="/admin/studios/list" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<%- include('../partials/footer') %>

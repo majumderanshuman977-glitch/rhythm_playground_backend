@@ -1,0 +1,171 @@
+<%- include('../partials/headers', { title: `Studio Details - ${studio.name}` }) %>
+<%- include('../partials/sidebar', { title: "Studios" }) %>
+
+<div class="content-wrapper">
+  <!-- Page Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1 class="m-0">Studio Details</h1>
+        </div>
+        <div class="col-sm-6 text-end">
+          <a href="/admin/studios/list" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Message -->
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success text-center mx-3"><%= success %></div>
+  <% } %>
+
+  <!-- Error Messages -->
+  <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul class="mb-0">
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Main Content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Studio Information</h3>
+        </div>
+
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5><strong>Name:</strong></h5>
+              <p><%= studio.name %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>Status:</strong></h5>
+              <% if (studio.active) { %>
+                <span class="badge bg-success">Active</span>
+              <% } else { %>
+                <span class="badge bg-secondary">Inactive</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5><strong>Address:</strong></h5>
+              <p><%= studio.address %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>City:</strong></h5>
+              <p><%= studio.city || 'N/A' %></p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5><strong>State:</strong></h5>
+              <p><%= studio.state || 'N/A' %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>Country:</strong></h5>
+              <p><%= studio.country || 'N/A' %></p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5><strong>Phone:</strong></h5>
+              <p><%= studio.phone || 'N/A' %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>Email:</strong></h5>
+              <p><%= studio.email || 'N/A' %></p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5><strong>Latitude:</strong></h5>
+              <p><%= studio.latitude || 'N/A' %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>Longitude:</strong></h5>
+              <p><%= studio.longitude || 'N/A' %></p>
+            </div>
+          </div>
+
+          <% if (studio.latitude && studio.longitude) { %>
+            <div class="mb-3">
+              <h5><strong>Location Map:</strong></h5>
+              <iframe
+                width="100%"
+                height="300"
+                frameborder="0"
+                style="border:0"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps?q=<%= studio.latitude %>,<%= studio.longitude %>&hl=en&z=15&output=embed"
+                allowfullscreen>
+              </iframe>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="card-footer text-end">
+          <a href="/admin/studios/edit/<%= studio.id %>" class="btn btn-warning me-2">
+            <i class="bi bi-pencil-square"></i> Edit
+          </a>
+          <button class="btn btn-danger delete-btn" data-id="<%= studio.id %>">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const deleteButton = document.querySelector('.delete-btn');
+    if (deleteButton) {
+      deleteButton.addEventListener('click', async () => {
+        const id = deleteButton.getAttribute('data-id');
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then(result => {
+          if (result.isConfirmed) {
+            fetch(`/admin/studios/delete/${id}`, { method: 'DELETE' })
+              .then(res => res.json())
+              .then(data => {
+                if (data.success) {
+                  Swal.fire('Deleted!', data.message, 'success');
+                  setTimeout(() => window.location.href = '/admin/studios/list', 1000);
+                } else {
+                  Swal.fire('Error', data.message, 'error');
+                }
+              })
+              .catch(() => Swal.fire('Error', 'Something went wrong', 'error'));
+          }
+        });
+      });
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>

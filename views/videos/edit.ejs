@@ -1,0 +1,96 @@
+<%- include('../partials/headers', { title: "Edit Video" }) %>
+<%- include('../partials/sidebar', { title: "Videos" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h1>Edit Video</h1>
+    </div>
+  </section>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul><% errors.forEach(err => { %><li><%= err %></li><% }) %></ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Update Video Details</h3>
+        </div>
+
+        <form action="/admin/videos/edit/<%= video.id %>" method="POST" enctype="multipart/form-data">
+          <div class="card-body row g-3">
+
+            <div class="col-md-6">
+              <label>Title</label>
+              <input type="text" name="title" class="form-control" value="<%= video.title %>" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>Instructor</label>
+              <select name="instructor_id" class="form-select" required>
+                <% instructors.forEach(inst => { %>
+                  <option value="<%= inst.id %>" <%= inst.id === video.instructor_id ? 'selected' : '' %>>
+                    <%= inst.first_name %> <%= inst.last_name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>Class Type</label>
+              <select name="class_id" class="form-select" required>
+                <% classTypes.forEach(ct => { %>
+                  <option value="<%= ct.id %>" <%= ct.id === video.class_id ? 'selected' : '' %>>
+                    <%= ct.name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>Duration (minutes)</label>
+              <input type="number" name="duration" class="form-control" value="<%= video.duration || '' %>" />
+            </div>
+
+            <div class="col-md-6">
+              <label>File Size (MB)</label>
+              <input type="number" name="size" class="form-control" value="<%= video.size || '' %>" />
+            </div>
+
+            <div class="col-md-12">
+              <label>Description</label>
+              <textarea name="description" class="form-control" rows="3"><%= video.description || '' %></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label>Video File (optional)</label>
+              <input type="file" name="video" class="form-control" accept="video/*" />
+              <% if (video.video) { %>
+                <small>Current: <a href="<%= video.video %>" target="_blank">View</a></small>
+              <% } %>
+            </div>
+
+            <div class="col-md-6">
+              <label>Thumbnail (optional)</label>
+              <input type="file" name="thumbnail" class="form-control" accept="image/*" />
+              <% if (video.thumbnail) { %>
+                <img src="<%= video.thumbnail %>" width="80" class="mt-2 rounded shadow-sm">
+              <% } %>
+            </div>
+
+          </div>
+
+          <div class="card-footer text-end">
+            <button type="submit" class="btn btn-success">Update Video</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

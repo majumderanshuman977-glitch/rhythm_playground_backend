@@ -1,0 +1,70 @@
+<%- include('../partials/headers', { title: "Add Short Video" }) %>
+<%- include('../partials/sidebar', { title: "Short Videos" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h1>Add Short Video</h1>
+    </div>
+  </section>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul>
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Video Details</h3>
+        </div>
+        <form action="/admin/short-videos/add" method="POST" enctype="multipart/form-data">
+          <div class="card-body row g-3">
+
+            <div class="col-md-6">
+              <label>Upload Video <span class="text-danger">*</span></label>
+              <input type="file" name="video" class="form-control" accept="video/*" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>Select Service Type <span class="text-muted">(Optional)</span></label>
+              <select name="service_id" class="form-control">
+                <option value="">-- Optional Service Type --</option>
+                <% classTypes.forEach(type => { %>
+                  <option value="<%= type.id %>"><%= type.name %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>Upload Thumbnail <span class="text-danger">*</span></label>
+              <input type="file" name="thumbnail" class="form-control" accept="image/*" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>Status <span class="text-danger">*</span></label>
+              <select name="status" class="form-control" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="card-footer text-end">
+            <button type="reset" class="btn btn-secondary me-2">Reset</button>
+            <button type="submit" class="btn btn-primary">Add Video</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

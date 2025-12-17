@@ -1,0 +1,114 @@
+<%- include('../partials/headers', { title: "Edit Testimonial" }) %>
+<%- include('../partials/sidebar', { title: "Testimonials" }) %>
+
+<div class="content-wrapper">
+
+  <!-- Page Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1>Edit Testimonial</h1>
+        </div>
+        <div class="col-sm-6 text-end">
+          <a href="/admin/testimonials/list" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edit Form -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-body">
+
+          <% if (success) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <%= success %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          <% } %>
+
+          <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show">
+              <ul class="mb-0">
+                <% errors.forEach(err => { %>
+                  <li><%= err %></li>
+                <% }) %>
+              </ul>
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          <% } %>
+
+          <form action="/admin/testimonials/update/<%= testimonial.id %>" method="POST" enctype="multipart/form-data">
+
+            <div class="row">
+
+              <!-- Client Name -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Client Name</label>
+                <input type="text" name="client_name" class="form-control" 
+                       value="<%= testimonial.name %>" required>
+              </div>
+
+              <!-- Role -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Role / Position</label>
+                <input type="text" name="client_role" class="form-control" 
+                       value="<%= testimonial.role || '' %>" placeholder="e.g. Web Developer">
+              </div>
+
+
+              <!-- Status -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Status</label>
+                <select name="is_active" class="form-select">
+                  <option value="1" <%= testimonial.status ? "selected" : "" %>>Active</option>
+                  <option value="0" <%= !testimonial.status ? "selected" : "" %>>Inactive</option>
+                </select>
+              </div>
+
+              <!-- Review Text -->
+              <div class="col-md-12 mb-3">
+                <label class="form-label">Client Review</label>
+                <textarea name="review" rows="4" class="form-control" required><%= testimonial.description %></textarea>
+              </div>
+
+              <!-- Current Image -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Current Image</label><br>
+                <% if (testimonial.image) { %>
+                  <img src="<%= baseUrl %>/uploads/testimonials/<%= testimonial.image %>" 
+                       class="img-thumbnail" style="max-width:150px;">
+                <% } else { %>
+                  <p class="text-muted">No image uploaded</p>
+                <% } %>
+              </div>
+
+              <!-- Upload New Image -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Upload New Image</label>
+                <input type="file" name="image" class="form-control" accept="image/*">
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Update Testimonial
+              </button>
+              <a href="/admin/testimonials/list" class="btn btn-secondary">Cancel</a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

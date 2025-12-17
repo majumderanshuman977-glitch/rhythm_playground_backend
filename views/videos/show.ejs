@@ -1,0 +1,55 @@
+<%- include('../partials/headers', { title: "View Video" }) %>
+<%- include('../partials/sidebar', { title: "Videos" }) %>
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h1>Video Details</h1>
+    </div>
+  </section>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul><% errors.forEach(err => { %><li><%= err %></li><% }) %></ul>
+    </div>
+  <% } %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title"><%= video.title %></h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8 text-center">
+              <% if (video.video) { %>
+                <video controls width="100%" class="rounded shadow-sm">
+                  <source src="<%= video.video %>" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              <% } else { %>
+                <p class="text-muted">No video file found.</p>
+              <% } %>
+            </div>
+
+            <div class="col-md-4">
+              <p><strong>Instructor:</strong> <%= video.instructor?.first_name %> <%= video.instructor?.last_name %></p>
+              <p><strong>Class Type:</strong> <%= video.classType?.name %></p>
+              <p><strong>Duration:</strong> <%= video.duration || '-' %> min</p>
+              <p><strong>Size:</strong> <%= video.size || '-' %> MB</p>
+              <p><strong>Created At:</strong> <%= video.createdAt.toLocaleString() %></p>
+              <p><strong>Description:</strong></p>
+              <p><%= video.description || 'No description' %></p>
+
+              <a href="/admin/videos/edit/<%= video.id %>" class="btn btn-warning btn-sm me-1">Edit</a>
+              <a href="/admin/videos" class="btn btn-secondary btn-sm">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,105 @@
+<%- include('../partials/headers') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content-wrapper">
+
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Add Testimonial</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="card card-primary card-outline shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">Testimonial Details</h3>
+                </div>
+
+                <!-- Flash Messages -->
+                <% if (success) { %>
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <% } %>
+
+               <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger">
+        <ul>
+            <% errors.forEach(err => { %>
+                <li><%= err %></li>
+            <% }); %>
+        </ul>
+    </div>
+<% } %>
+
+
+                <!-- Testimonial Form -->
+                <form action="/admin/testimonials/add" method="POST" enctype="multipart/form-data">
+                    <div class="card-body row g-3">
+
+                        <!-- Name -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Client Name <span class="text-danger">*</span></label>
+                            <input type="text" name="client_name" class="form-control"
+                                value="<%= oldInput?.client_name || '' %>" required>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Role / Position</label>
+                            <input type="text" name="client_role" class="form-control"
+                                value="<%= oldInput?.client_role || '' %>" placeholder="e.g. Web Developer">
+                        </div>
+
+                       
+
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="is_active" class="form-select">
+                                <option value="1" <%= oldInput?.is_active == 1 ? "selected" : "" %>>Active</option>
+                                <option value="0" <%= oldInput?.is_active == 0 ? "selected" : "" %>>Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Client Review <span class="text-danger">*</span></label>
+                            <textarea name="review" rows="4" class="form-control" required><%= oldInput?.review || '' %></textarea>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Profile Image <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="file" name="image" class="form-control" accept="image/*" required>
+                                <label class="input-group-text">Upload</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer text-end">
+                        <button type="reset" class="btn btn-secondary me-2">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Testimonial</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<%- include('../partials/footer') %>

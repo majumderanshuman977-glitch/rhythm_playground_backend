@@ -1,0 +1,126 @@
+<%- include('../partials/headers', { title: "Manage Class Sessions" }) %>
+<%- include('../partials/sidebar', { title: "Class Sessions" }) %>
+
+<div class="content-wrapper">
+  <!-- Page Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1 class="m-0">Manage Class Sessions</h1>
+        </div>
+        <div class="col-sm-6 text-end">
+          <a href="/admin/class-sessions/add" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle"></i> Add Session
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <% if (success) { %>
+    <div class="alert alert-success text-center mx-3"><%= success %></div>
+  <% } %>
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mx-3">
+      <ul>
+        <% errors.forEach(err => { %><li><%= err %></li><% }); %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Table -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-header">
+          <h3 class="card-title">Class Sessions List</h3>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-striped table-bordered align-middle text-center">
+            <thead class="table-primary">
+              <tr>
+                <th>#</th>
+                <th>Class Type</th>
+                <th>Instructor</th>
+                <th>Studio</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (sessions && sessions.length > 0) { %>
+                <% sessions.forEach((s, i) => { %>
+                  <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= s.classType?.name || '-' %></td>
+                    <td><%= s.instructor?.first_name + ' ' + s.instructor?.last_name %></td>
+                    <td><%= s.studio?.name || '-' %></td>
+                    <td><%= new Date(s.start_time).toLocaleString() %></td>
+                    <td><%= new Date(s.end_time).toLocaleString() %></td>
+                    <td>
+                      <% if (s.status === "scheduled") { %>
+                        <span class="badge bg-info">Scheduled</span>
+                      <% } else if (s.status === "completed") { %>
+                        <span class="badge bg-success">Completed</span>
+                      <% } else { %>
+                        <span class="badge bg-danger">Cancelled</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <a href="/admin/class-sessions/<%= s.id %>" class="btn btn-info btn-sm me-1">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                      <a href="/admin/class-sessions/edit/<%= s.id %>" class="btn btn-warning btn-sm me-1">
+    <i class="bi bi-pencil-square"></i> 
+</a>
+
+                      <button class="btn btn-danger btn-sm delete-btn" data-id="<%= s.id %>">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="8" class="text-muted py-3">No sessions found</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      Swal.fire({
+        title: 'Delete Session?',
+        text: "You can't undo this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(result => {
+        if (result.isConfirmed) {
+          fetch(`/admin/class-sessions/delete/${id}`, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) Swal.fire('Deleted!', data.message, 'success').then(() => location.reload());
+              else Swal.fire('Error', data.message, 'error');
+            });
+        }
+      });
+    });
+  });
+});
+</script>
+
+<%- include('../partials/footer') %>
