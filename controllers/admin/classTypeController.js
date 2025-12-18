@@ -125,7 +125,7 @@ export const updateClassType = async (req, res) => {
                 const oldPath = path.join(process.cwd(), classType.image);
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
-            image = `/uploads/class_types/${req.file.filename}`;
+            image = `/uploads/admin/class_types/${req.file.filename}`;
         }
 
         await classType.update({

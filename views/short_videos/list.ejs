@@ -3,11 +3,19 @@
 
 <div class="content-wrapper">
   <section class="content-header">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <h1>Short Videos</h1>
-    
-    </div>
-  </section>
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Manage Short Videos</h1>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <a href="/admin/short-videos/add" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add short videos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
   <% if (success) { %>
     <div class="alert alert-success text-center mx-3"><%= success %></div>

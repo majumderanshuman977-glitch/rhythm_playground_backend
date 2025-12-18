@@ -46,6 +46,26 @@
         <form action="/admin/class-sessions/edit/<%= classSession.id %>" method="POST" class="p-3">
           <div class="row g-3">
 
+
+            <!-- Title -->
+            <div class="col-md-6">
+              <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+              <input type="text"  class="form-control" id="title" name="title" value="<%= classSession.title %>" required>
+            </div>
+            <!-- description  -->
+           <div class="col-md-6">
+  <label for="description" class="form-label">
+    Description <span class="text-danger">*</span>
+  </label>
+
+  <textarea
+    rows="3"
+    class="form-control"
+    id="description"
+    name="description"
+    required><%= classSession.title %></textarea>
+</div>
+
             <!-- Class Type -->
             <div class="col-md-6">
               <label for="class_type_id" class="form-label">Class Type <span class="text-danger">*</span></label>
@@ -70,17 +90,7 @@
               </select>
             </div>
 
-            <!-- Studio -->
-            <div class="col-md-6">
-              <label for="studio_id" class="form-label">Studio <span class="text-danger">*</span></label>
-              <select class="form-select" id="studio_id" name="studio_id" required>
-                <% studios.forEach(st => { %>
-                  <option value="<%= st.id %>" <%= classSession.studio_id === st.id ? 'selected' : '' %>>
-                    <%= st.name %>
-                  </option>
-                <% }); %>
-              </select>
-            </div>
+
 
             <!-- Capacity -->
             <div class="col-md-3">
@@ -97,26 +107,54 @@
             </div>
 
             <!-- Start Time -->
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <label for="start_time" class="form-label">Start Time</label>
               <input type="datetime-local" class="form-control" id="start_time" name="start_time"
-                value="<%= classSession.start_time ? classSession.start_time.toISOString().slice(0,16) : '' %>" />
-            </div>
+                value="</%= classSession.start_time ? classSession.start_time.toISOString().slice(0,16) : '' %>" />
+            </div> -->
 
             <!-- End Time -->
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <label for="end_time" class="form-label">End Time</label>
               <input type="datetime-local" class="form-control" id="end_time" name="end_time"
-                value="<%= classSession.end_time ? classSession.end_time.toISOString().slice(0,16) : '' %>" />
-            </div>
+                value="</%= classSession.end_time ? classSession.end_time.toISOString().slice(0,16) : '' %>" />
+            </div> -->
 
             <!-- Price -->
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <label for="price" class="form-label">Price (₹)</label>
               <input type="number" class="form-control" id="price" name="price"
-                value="<%= classSession.price %>" step="0.01" />
+                value="</%= classSession.price %>" step="0.01" />
+            </div> -->
+
+             <!-- class date  -->
+             <div class="col-md-6">
+              <label for="class_date" class="form-label">Class Date</label>
+              <input type="date" class="form-control" id="class_date" name="class_date"
+                value="<%= classSession.class_date ? classSession.class_date.toISOString().slice(0,10) : '' %>" />
             </div>
 
+            <!-- class time  -->
+            <div class="col-md-6">
+  <label for="class_time" class="form-label">Class Time</label>
+  <input
+    type="time"
+    class="form-control"
+    id="class_time"
+    name="class_time"
+    value="<%= classSession.class_time 
+      ? classSession.class_time.toString().slice(0,5) 
+      : '' %>"
+  />
+</div>
+
+
+            <!-- meeting link  -->
+            <div class="col-md-6">
+              <label for="meeting_link" class="form-label">Meeting Link</label>
+              <input type="text" class="form-control" id="meeting_link" name="meeting_link"
+                value="<%= classSession.meeting_link ? classSession.meeting_link : '' %>" />
+            </div>
             <!-- Status -->
             <div class="col-md-6">
               <label for="status" class="form-label">Status</label>
@@ -138,5 +176,7 @@
     </div>
   </section>
 </div>
+
+
 
 <%- include('../partials/footer') %>

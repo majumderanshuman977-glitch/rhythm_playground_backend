@@ -3,10 +3,19 @@
 
 <div class="content-wrapper">
   <section class="content-header">
-    <div class="container-fluid">
-      <h1>Add Short Video</h1>
-    </div>
-  </section>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Add Short Videos</h1>
+                </div>               
+               <div class="col-sm-6 text-end">
+          <a href="/admin/short-videos/" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left-circle"></i> Back to List
+          </a>
+        </div>
+            </div>
+        </div>
+    </section>
 
   <% if (errors && errors.length > 0) { %>
     <div class="alert alert-danger mx-3">

@@ -13,73 +13,100 @@
 
   <% if (errors && errors.length > 0) { %>
     <div class="alert alert-danger mx-3">
-      <ul><% errors.forEach(err => { %><li><%= err %></li><% }) %></ul>
+      <ul>
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
     </div>
   <% } %>
 
   <section class="content">
     <div class="container-fluid">
       <div class="card card-outline card-primary shadow-sm">
-        <div class="card-header"><h3 class="card-title">New Class Session</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">New Class Session</h3>
+        </div>
 
         <form action="/admin/class-sessions/add" method="POST">
           <div class="card-body row g-3">
 
-            <div class="col-md-4">
-              <label>Class Type</label>
-              <select name="class_type_id" class="form-select" required>
-                <option value="">Select Class Type</option>
-                <% classTypes.forEach(ct => { %>
-                  <option value="<%= ct.id %>"><%= ct.name %></option>
-                <% }); %>
-              </select>
+            <!-- Class Type -->
+         <div class="col-md-4">
+  <label>Class Type</label>
+  <select name="class_type_id" class="form-select" required id="classTypeSelect">
+    <option value="">Select Class Type</option>
+    <% classTypes.forEach(ct => { %>
+      <option value="<%= ct.id %>"><%= ct.name %></option>
+    <% }) %>
+  </select>
+</div>
+
+
+
+            <!-- Instructor -->
+       <div class="col-md-4">
+  <label>Instructor</label>
+  <select name="instructor_id" class="form-select" required id="instructorSelect">
+    <option value="">Select Instructor</option>
+
+    <% instructors.forEach(i => { %>
+      <option 
+        value="<%= i.id %>"
+        data-class-type="<%= i.service_id %>">
+        <%= i.first_name %> <%= i.last_name %>
+      </option>
+    <% }) %>
+  </select>
+</div>
+
+
+
+      
+
+            <!-- Title -->
+            <div class="col-md-6">
+              <label>Class Title</label>
+              <input type="text" name="title" class="form-control" required />
             </div>
 
-            <div class="col-md-4">
-              <label>Instructor</label>
-              <select name="instructor_id" class="form-select" required>
-                <option value="">Select Instructor</option>
-                <% instructors.forEach(i => { %>
-                  <option value="<%= i.id %>"><%= i.first_name %> <%= i.last_name %></option>
-                <% }); %>
-              </select>
-            </div>
-
-            <div class="col-md-4">
-              <label>Studio</label>
-              <select name="studio_id" class="form-select" required>
-                <option value="">Select Studio</option>
-                <% studios.forEach(s => { %>
-                  <option value="<%= s.id %>"><%= s.name %></option>
-                <% }); %>
-              </select>
-            </div>
-
+            <!-- Capacity -->
             <div class="col-md-3">
-              <label>Capacity</label>
-              <input type="number" name="capacity" class="form-control" min="1" required />
+              <label>Total Capacity</label>
+              <input type="number" name="capacity" min="1" class="form-control" required />
             </div>
 
+            <!-- Duration -->
             <div class="col-md-3">
               <label>Duration (minutes)</label>
-              <input type="number" name="duration_minutes" class="form-control" min="1" required />
+              <input type="number" name="duration_minutes" min="1" class="form-control" required />
             </div>
 
+            <!-- Date -->
             <div class="col-md-3">
-              <label>Start Time</label>
-              <input type="datetime-local" name="start_time" class="form-control" required />
+              <label>Class Date</label>
+              <input type="date" name="class_date" class="form-control" required />
             </div>
 
+            <!-- Time -->
             <div class="col-md-3">
-              <label>End Time</label>
-              <input type="datetime-local" name="end_time" class="form-control" required />
+              <label>Class Time</label>
+              <input type="time" name="class_time" class="form-control" required />
             </div>
 
-            <div class="col-md-3">
-              <label>Price ($)</label>
-              <input type="number" step="0.01" name="price" class="form-control" required />
+            <!-- Meeting Link -->
+            <div class="col-md-6">
+              <label>Meeting Link</label>
+              <input type="url" name="meeting_link" class="form-control" required />
             </div>
 
+            <!-- Description -->
+            <div class="col-md-12">
+              <label>Description</label>
+              <textarea name="description" rows="4" class="form-control" required></textarea>
+            </div>
+
+            <!-- Status -->
             <div class="col-md-3">
               <label>Status</label>
               <select name="status" class="form-select">
@@ -90,6 +117,7 @@
             </div>
 
           </div>
+
           <div class="card-footer text-end">
             <button type="reset" class="btn btn-secondary">Reset</button>
             <button type="submit" class="btn btn-primary">Add Session</button>
@@ -99,5 +127,28 @@
     </div>
   </section>
 </div>
+
+<script>
+  const classTypeSelect = document.getElementById("classTypeSelect");
+  const instructorSelect = document.getElementById("instructorSelect");
+
+  const instructorOptions = Array.from(instructorSelect.options);
+
+  classTypeSelect.addEventListener("change", function () {
+    const selectedClassTypeId = this.value;
+
+    instructorSelect.innerHTML = '<option value="">Select Instructor</option>';
+
+    if (!selectedClassTypeId) return;
+
+    instructorOptions.forEach(option => {
+      if (option.dataset.classType === selectedClassTypeId) {
+        instructorSelect.appendChild(option);
+      }
+    });
+  });
+</script>
+
+
 
 <%- include('../partials/footer') %>

@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import ClassType from "./classTypeModel.js";
 import Instructor from "./instructorModel.js";
-import Studio from "./studioModel.js";
+
 
 const ClassSession = sequelize.define(
     "ClassSession",
@@ -22,10 +22,17 @@ const ClassSession = sequelize.define(
             allowNull: false,
             references: { model: Instructor, key: "id" },
         },
-        studio_id: {
-            type: DataTypes.INTEGER,
+        instructor_name:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        title:{
+            type: DataTypes.STRING,
             allowNull: false,
-            references: { model: Studio, key: "id" },
+        },
+        description:{
+             type: DataTypes.TEXT,
+             allowNull: false, 
         },
         capacity: {
             type: DataTypes.INTEGER,
@@ -35,21 +42,21 @@ const ClassSession = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        start_time: {
-            type: DataTypes.DATE,
+        class_time: {
+            type: DataTypes.TIME,
             allowNull: false,
         },
-        end_time: {
+        class_date:{
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: false
         },
         booked_count: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
-        price: {
-            type: DataTypes.DECIMAL(10, 2),
-            allowNull: false,
+        meeting_link:{
+            type: DataTypes.STRING,
+            allowNull: false
         },
         status: {
             type: DataTypes.ENUM("scheduled", "completed", "cancelled"),
@@ -65,6 +72,6 @@ const ClassSession = sequelize.define(
 // Relationships
 ClassSession.belongsTo(ClassType, { foreignKey: "class_type_id", as: "classType" });
 ClassSession.belongsTo(Instructor, { foreignKey: "instructor_id", as: "instructor" });
-ClassSession.belongsTo(Studio, { foreignKey: "studio_id", as: "studio" });
+
 
 export default ClassSession;
