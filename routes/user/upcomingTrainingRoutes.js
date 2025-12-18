@@ -6,4 +6,5 @@ import {UpcominTraining } from "../../controllers/user/upcominTrainingController
 
 router.get("/", UpcominTraining);
 
+
 export default router;

@@ -26,8 +26,8 @@ import session from "express-session";
 import { isAdminAuthenticated } from "./middleware/admin/adminAuthMiddleware.js";
 import { streamVideo } from "./middleware/user/streamVideo.js";
 import { streamShortVideo } from "./middleware/user/streamShortVideo.js";
-import adminTestimonialRoutes from "./routes/admin/adminTestimonialsRoutes.js"
-
+import adminTestimonialRoutes from "./routes/admin/adminTestimonialsRoutes.js";
+import classSchedules from "./routes/user/classSchedulesRoutes.js";
 import cors from "cors";
 dotenv.config();
 
@@ -108,7 +108,7 @@ app.use("/api/testimonials",TestimonialRoutes);
 app.use("/api/services",Services);
 app.use("/api/upcoming-training",UpcominTraining);
 app.use("/api/short-videos",ShortVideoServices);
-
+app.use("/api/class-schedules",classSchedules);
 
 
 
