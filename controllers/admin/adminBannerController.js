@@ -42,7 +42,7 @@ export const addBanner = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "Video file is required",
+        message: "Image file is required",
       });
     }
 

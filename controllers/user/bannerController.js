@@ -1,6 +1,6 @@
 import Banner from "../../models/bannerModel.js";
 import path from "path"; 
-
+import { success,error } from "../../utils/apiResponse.js";
 // export const BannerList = async (req, res) => {
 //   try {
 //     const banners = await Banner.findAll({
@@ -25,39 +25,64 @@ import path from "path";
 //     res.status(500).json({ message: "Server error" });
 //   }
 // };
-export const BannerList = async (req, res) => {
-  try {
+// export const BannerList = async (req, res) => {
+//   try {
     
 
 
-  const banners = await Banner.findAll({ where: { is_active: 1 } });
+//   const banners = await Banner.findAll({ where: { is_active: 1 } });
    
+
+//     const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+//     const bannersWithUrl = banners.map((banner) => {
+//       const data = banner.toJSON();
+//       const filename = path.basename(data.banner || "");
+//       return {
+//         ...data,
+//         videoUrl: `${baseUrl}/stream/${encodeURIComponent(filename)}`,
+//       };
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       count: bannersWithUrl.length,
+//       data: bannersWithUrl,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+export const BannerList = async (req, res) => {
+  try {
+    const banners = await Banner.findAll({
+      where: { is_active: 1 },
+    });
 
     const baseUrl = `${req.protocol}://${req.get("host")}`;
 
     const bannersWithUrl = banners.map((banner) => {
       const data = banner.toJSON();
       const filename = path.basename(data.banner || "");
+
       return {
         ...data,
-        videoUrl: `${baseUrl}/stream/${encodeURIComponent(filename)}`,
+        imageUrl: filename
+          ? `${baseUrl}/uploads/admin/banners/${encodeURIComponent(filename)}`
+          : null,
       };
     });
+    success(res,"Banner List",bannersWithUrl)
 
-    res.status(200).json({
-      success: true,
-      count: bannersWithUrl.length,
-      data: bannersWithUrl,
-    });
+    
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  error(res,error.message);
   }
 };
-
-
 // Get single banner by ID (Public API)
 export const getBannerById = async (req, res) => {
   try {
